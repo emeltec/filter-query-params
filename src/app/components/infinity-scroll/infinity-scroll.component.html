@@ -1,0 +1,44 @@
+<!-- <select id="select" size="3" 
+infiniteScroll
+[infiniteScrollDistance]="2"
+[infiniteScrollThrottle]="50"
+(scrolled)="onScroll()" [scrollWindow]="false"
+>
+  <option *ngFor="let item of companies">{{item}}</option>
+</select> -->
+<input class="search" type="text" id="search"  #search (focus)="onFocus()" (blur)="onBlur()">
+<br><br>
+
+<div class="panel" [ngClass]="{'show': companies.length > 0 && showPanel}"
+  infiniteScroll
+  [infiniteScrollDistance]="3"
+  [infiniteScrollThrottle]="50"
+  (scrolled)="onScroll()"
+  [scrollWindow]="false"
+  [infiniteScrollContainer]="selector"
+  [fromRoot]="true"
+>
+<div>
+  <div id="select" class="list-company" size="3">
+    <div class="option" *ngFor="let item of companies" (click)="selectItem(item)">
+      <div>{{ item?.name }}</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- <div
+  infiniteScroll
+  [infiniteScrollDistance]="3"
+  [infiniteScrollThrottle]="50"
+  (scrolled)="onScroll()"
+  [scrollWindow]="false"
+  [infiniteScrollContainer]="selector"
+  [fromRoot]="true"
+>
+<div>
+  <select id="select" class="list-company" size="3">
+    <option *ngFor="let item of companies">{{ item }}</option>
+  </select>
+</div>
+</div> -->

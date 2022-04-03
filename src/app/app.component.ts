@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { IProvider } from './interfaces/provider';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'filter-query-params';
+  title = 'Filter query params app';
+
+  constructor(
+    private formBuilder: FormBuilder
+  ) { }
+
+  ngOnInit() {
+
+  }
+
+  recibeMenssge(msg:string) {
+    this.title = msg;
+  }
+  
 }

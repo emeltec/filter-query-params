@@ -1,0 +1,26 @@
+
+.list-company {
+    max-height: 100px;
+    background: orange;
+    width: 300px;
+    overflow-y: scroll;
+}
+
+.panel {
+    display: none;
+}
+.panel.show {
+    display: block;
+}
+
+.option {
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #ddd;
+}
+
+.search {
+    width: 400px;
+}

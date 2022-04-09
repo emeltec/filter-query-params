@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MessageDefault, MessageError } from 'src/app/config/form.message';
 import { IProvider } from 'src/app/interfaces/provider';
 
 @Component({
@@ -8,13 +9,12 @@ import { IProvider } from 'src/app/interfaces/provider';
   styleUrls: ['./form-search.component.scss']
 })
 export class FormSearchComponent implements OnInit {
-
+  stateCompany: string = '';
+  messageCompany: string = MessageDefault.COMPANY_TO_PAY;
   providerSelected!: IProvider;
   formSearch!: FormGroup;
 
-  constructor(
-    private formBuilder: FormBuilder
-  ) { }
+  constructor() { }
 
   ngOnInit() {
     this.buildFormSearch();
@@ -28,15 +28,41 @@ export class FormSearchComponent implements OnInit {
     })
   }
 
-  receiveProviderSelected(provider: IProvider) {
+  listenSelectedProvider(provider: IProvider) {
     console.log(provider)
     this.providerSelected = provider;
-    this.formSearch.patchValue({provider:provider.name})
-    this.getServices();
+    this.formSearch.patchValue({provider: provider.name});
+    if(provider.serviceProviderId !== null) {
+      this.getServices();
+    }
+  }
+
+  listenStateCompany(state: string) {
+    this.stateCompany = state;
+    console.log('Listen State: ', state);
   }
 
   getServices() {
     console.log('Llamando servicios')
+  }
+
+  sendForm() {
+    console.log(this.formSearch.controls['provider'].value);
+    console.log('State', this.stateCompany);
+
+    if(this.formSearch.controls['provider'].value === null) {
+      this.stateCompany = 'error';
+      this.messageCompany = MessageError.COMPANY_EMPTY;
+    } else {
+      this.stateCompany = '';
+      this.messageCompany = MessageDefault.COMPANY_TO_PAY;
+    }
+    
+    
+  }
+
+  cancel() {
+    
   }
 
 }

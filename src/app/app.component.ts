@@ -18,7 +18,7 @@ export class AppComponent {
 
   }
 
-  recibeMenssge(msg:string) {
+  listenMessage(msg:string) {
     this.title = msg;
   }
   

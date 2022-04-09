@@ -1,17 +1,20 @@
-<input class="search" type="text" id="search"  #search (focus)="onFocus()" (blur)="onBlur()">
-
-<div class="panel" [ngClass]="{'show': providers.length > 0 && showPanel}">
-<div>
-  <div id="select" class="list-company"
-  infiniteScroll
-  [infiniteScrollDistance]="3"
-  [infiniteScrollThrottle]="50"
-  (scrolled)="onScroll()"
-  [scrollWindow]="false"
-  [fromRoot]="true">
-    <div class="option" *ngFor="let provider of providers" (click)="selectProvider(provider)">
-      <div>{{ provider?.name }}</div>
+<div class="select-autocomplete">
+  <input class="form-control" type="text" #search (change)="change($event)" (focus)="onFocus()" (blur)="onBlur()">
+  <div class="panel" [ngClass]="{'show': providers.length > 0 && showPanel}">
+    <div class="container-list"
+    infiniteScroll
+    [infiniteScrollDistance]="3"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    [scrollWindow]="false"
+    [fromRoot]="true">
+      <div class="container-options" *ngFor="let provider of providers" (click)="selectProvider(provider)">
+        <div class="option">{{ provider?.name }}</div>
+      </div>
     </div>
   </div>
+  <div class="label-message" [ngClass]="{'error': stateCompany == 'error'}">
+    {{messageCompany}}
+  </div>
 </div>
-</div>
+

@@ -1,59 +1,84 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Observable, pluck, switchMap, tap } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, filter, fromEvent, map, switchMap, tap } from 'rxjs';
 import { MessageDefault, MessageError } from 'src/app/config/form.message';
 import { IProvider, IProviderResponse } from 'src/app/interfaces/provider';
 import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
-  selector: 'app-select-autocomplete',
-  templateUrl: './select-autocomplete.component.html',
-  styleUrls: ['./select-autocomplete.component.scss']
+  selector: 'app-select-autocomplete2',
+  templateUrl: './select-autocomplete2.component.html',
+  styleUrls: ['./select-autocomplete2.component.scss']
 })
-export class SelectAutocompleteComponent implements OnInit {
-  @ViewChild('search', { static: true }) searchText!: ElementRef;
+export class SelectAutocomplete2Component implements OnInit {
   @Output() emitSelectedProvider = new EventEmitter();
   @Output() emitStateCompany = new EventEmitter();
   @Input() stateCompany: string = '';
   @Input() messageCompany: string = '';
 
-  showPanel=false;
+  formSearch: FormGroup;
+  showPanel = false;
   counterPage = 0;
   totalPages = 0;
-  providers: IProvider[] = []
+  providers: IProvider[] = [];
 
   constructor(
     private http: HttpClient,
     private service: PaymentService
-  ) { }
+  ) {
+    this.formSearch = new FormGroup({
+      search: new FormControl()
+    })
+  }
+
 
   ngOnInit() {
-    const keyUp$ = fromEvent(this.searchText.nativeElement, 'keyup');
-    keyUp$.pipe(
+    this.formSearch.controls['search'].valueChanges.pipe(
       tap(e => {
-        console.log(e);
         this.counterPage = 0;
       }),
-      pluck('target', 'value'),
-      map((text:any) => text.trim()),
-      filter((text:any) => text.length > 1),
+      filter((text: string) => text.length > 1),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(text => this.service.getCompanies(text, this.counterPage))
-    ).subscribe((response:IProviderResponse) => {
+    ).subscribe(response => {
       console.log(response);
       this.providers = response.companies;
       this.totalPages = response.totalPages;
       this.validateCompany();
     })
 
+    // fromEvent(document, 'click')
+    //   .pipe(
+    //     take(1)
+    //   ).subscribe(() => this.hasNotClicked = false);
+
+    // const keyUp$ = fromEvent(this.searchText.nativeElement, 'keyup');
+    // keyUp$.pipe(
+    //   tap(e => {
+    //     console.log(e);
+    //     this.counterPage = 0;
+    //   }),
+    //   pluck('target', 'value'),
+    //   filter((text:any) => text.length > 1),
+    //   debounceTime(500),
+    //   distinctUntilChanged(),
+    //   switchMap(text => this.service.getCompanies(text, this.counterPage))
+    // ).subscribe((response:IProviderResponse) => {
+    //   console.log(response);
+    //   this.providers = response.companies;
+    //   this.totalPages = response.totalPages;
+    //   this.validateCompany();
+    // })
+
   }
 
   onScroll() {
-    const currentValue = this.searchText.nativeElement.value;
+    const currentValue = this.formSearch.value.search;
     this.counterPage += 1;
 
-    if(this.counterPage <= this.totalPages){
+    if (this.counterPage <= this.totalPages) {
       this.service.getCompanies(currentValue, this.counterPage).subscribe(response => {
         this.providers.push(...response.companies)
       })
@@ -61,30 +86,34 @@ export class SelectAutocompleteComponent implements OnInit {
   }
 
   selectProvider(provider: IProvider) {
-    this.searchText.nativeElement.value = provider.name;
+    console.log(provider);
+    this.formSearch.controls['search'].setValue(provider.name)
     this.emitSelectedProvider.emit(provider);
     this.emitStateCompany.emit('');
     this.messageCompany = MessageDefault.COMPANY_TO_PAY;
     this.showPanel = false;
   }
 
-  onFocus(){
+  onFocus() {
     this.showPanel = true;
   }
 
-  onBlur(){
+  onBlur() {
     setTimeout(() => {
       this.showPanel = false;
     }, 250);
   }
 
   validateCompany() {
-    this.emitSelectedProvider.emit({ name: null, serviceProviderId: null });
-    
-    if(this.providers.length === 0) {
+    this.emitSelectedProvider.emit({
+      name: null,
+      serviceProviderId: null
+    });
+    if (this.providers.length === 0) {
       this.stateCompany = 'error';
       this.messageCompany = MessageError.COMPANY_NOT_FOUND
       this.emitStateCompany.emit(this.stateCompany);
+
     } else {
       this.stateCompany = '';
       this.messageCompany = MessageDefault.COMPANY_TO_PAY;
@@ -92,9 +121,9 @@ export class SelectAutocompleteComponent implements OnInit {
     }
   }
 
-  change(event:any){
+  change(event: any) {
     console.log('CHANGE', event.target.value)
-    if(event.target.value.length < 2) {
+    if (event.target.value.length < 2) {
       this.stateCompany = 'error';
       this.messageCompany = MessageError.COMPANY_EMPTY;
       this.emitStateCompany.emit(this.stateCompany);

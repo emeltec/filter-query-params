@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Observable, pluck, switchMap, tap } from 'rxjs';
+import { IProvider, IProviderResponse } from 'src/app/interfaces/provider';
 import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
@@ -11,10 +12,11 @@ import { PaymentService } from 'src/app/services/payment.service';
 export class InfinityScrollComponent implements OnInit {
   @ViewChild('search', { static: true }) searchText!: ElementRef;
 
-  showPanel=false;
-  selector = ""
-  count = 0;
-  companies:any = []
+  showPanel = false;
+  selector = ".list-company"
+  counterPage = 0;
+  totalPages = 0;
+  providers: IProvider[] = []
   
   constructor(
     private http: HttpClient,
@@ -22,53 +24,41 @@ export class InfinityScrollComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    // for(let i= 1; i<30; i++) {
-    //   this.companies.push({
-    //     name: 'Empresa '+i,
-    //     serviceProviderId: 'C'+i
-    //   });
-    // }
-    this.searchText.nativeElement.focus()
-    setTimeout(() => {
-      this.selector = '.list-company'
-    }, 1000);
-
+    this.searchText.nativeElement.focus();
+  
     const keyUp$ = fromEvent(this.searchText.nativeElement, 'keyup');
     keyUp$.pipe(
-      tap(e => console.log(e)),
+      tap(e => {
+        console.log(e);
+        this.counterPage = 0;
+      }),
       pluck('target', 'value'),
       filter((text:any) => text.length > 1),
-      map((text:string) => text.toUpperCase()),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(text => this.service.getCompanies(text))
-    ).subscribe((response:any[]) => {
+    ).subscribe((response:IProviderResponse) => {
       console.log(response);
-      this.companies = response; 
+      this.providers = response.companies; 
+      this.totalPages = response.totalPages;
     })
   }
 
   onScroll() {
-    console.log("scrolled!!");
- 
-    this.companies.push({
-      name: 'Empresa '+this.count,
-      serviceProviderId: 'D'+this.count
-    });
-    this.count += 1;
+    const currentValue = this.searchText.nativeElement.value;
+    this.counterPage += 1;
+
+    if(this.counterPage <= this.totalPages){
+      this.service.getCompanies(currentValue, this.counterPage).subscribe(response => {
+        this.providers.push(...response.companies);
+      })
+    }
   }
 
-  
-
-  getPosts(name: any): Observable<any> {
-    const URL = `http://localhost:3000/providers?name=${name}`;
-    return this.http.get(URL);
-  }
-
-  selectItem(item:any) {
-    console.log(item);
+  selectItem(provider:IProvider) {
+    console.log(provider);
     this.showPanel = false;
-    this.searchText.nativeElement.value = item.name
+    this.searchText.nativeElement.value = provider.name
   }
 
   onFocus(){

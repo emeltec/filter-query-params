@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InputComponent } from './common/input/input.component';
 import { SelectAutocompleteComponent } from './common/select-autocomplete/select-autocomplete.component';
+import { SelectAutocomplete2Component } from './common/select-autocomplete2/select-autocomplete2.component';
 import { FormSearchComponent } from './components/form-search/form-search.component';
 import { InfinityScrollComponent } from './components/infinity-scroll/infinity-scroll.component';
 import { SearchComponent } from './components/search/search.component';
@@ -20,7 +21,8 @@ import { SearchComponent } from './components/search/search.component';
 
     InputComponent,
     SelectAutocompleteComponent,
-    FormSearchComponent
+    FormSearchComponent,
+    SelectAutocomplete2Component
   ],
   imports: [
     BrowserModule,

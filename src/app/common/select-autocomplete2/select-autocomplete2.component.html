@@ -1,0 +1,22 @@
+<form [formGroup]="formSearch">
+  <div class="select-autocomplete">
+    <input class="form-control" type="text" formControlName="search" 
+      (change)="change($event)" (focus)="onFocus()" (blur)="onBlur()">
+    <div class="panel" [ngClass]="{'show': providers.length > 0 && showPanel}">
+      <div class="container-list"
+      infiniteScroll
+      [infiniteScrollDistance]="3"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()"
+      [scrollWindow]="false"
+      [fromRoot]="true">
+        <div class="container-options" *ngFor="let provider of providers" (click)="selectProvider(provider)">
+          <div class="option">{{ provider?.name }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="label-message" [ngClass]="{'error': stateCompany == 'error'}">
+      {{messageCompany}}
+    </div>
+  </div>
+</form>

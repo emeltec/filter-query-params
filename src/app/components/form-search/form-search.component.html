@@ -1,32 +1,33 @@
 <div class="row">
   <div class="col-6">
-
-      <app-select-autocomplete (emitProviderSelected)="receiveProviderSelected($event)">
-      </app-select-autocomplete>
-      <br>
-      <form [formGroup]="formSearch">
-          <div class="form-group">
-              <input type="text" class="form-control" formControlName="provider">
-          </div>
-          <div class="form-group">
-              <label>Servicio</label>
-              <select class="form-control" formControlName="service">
-                  <option>Pago de matriculas</option>
-                  <option>Pago de Pension</option>
-                  <option>Pago por diplomas</option>
-              </select>
-          </div>
-          <div class="form-group">
-              <label>Codigo de usuario</label>
-              <input type="text" class="form-control" formControlName="clientCode">
-          </div>
-          <button type="submit" class="btn btn-primary">Buscar</button>
-      </form>
+    <app-select-autocomplete 
+      (emitSelectedProvider)="listenSelectedProvider($event)"
+      (emitStateCompany)="listenStateCompany($event)" 
+      [stateCompany]="stateCompany" [messageCompany]="messageCompany">
+    </app-select-autocomplete>
+    <br>
+    <form [formGroup]="formSearch">
+      <input type="hidden" class="form-control" formControlName="provider">
+      <div class="form-group">
+        <label>Servicio</label>
+        <select class="form-control" formControlName="service">
+          <option>Pago de matriculas</option>
+          <option>Pago de Pension</option>
+          <option>Pago por diplomas</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Codigo de usuario</label>
+        <input type="text" class="form-control" formControlName="clientCode">
+      </div>
+      <button (click)="sendForm()" class="btn btn-primary mx-2">Buscar</button>
+      <button (click)="cancel()" class="btn btn-danger">Cancel</button>
+    </form>
   </div>
 
   <div class="col-6">
-      <pre>
-          {{providerSelected | json}}
-      </pre>
+    <pre>
+    {{providerSelected | json}}
+    </pre>
   </div>
 </div>

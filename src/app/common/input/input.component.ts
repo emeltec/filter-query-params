@@ -6,7 +6,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit {
-  @Output() message = new EventEmitter()
+  @Output() emitMessage = new EventEmitter()
 
   constructor() { }
 
@@ -16,7 +16,7 @@ export class InputComponent implements OnInit {
 
   send() {
     console.log('Sendding')
-    this.message.emit('Hola carajo!')
+    this.emitMessage.emit('Hola carajo!')
   }
 
 }

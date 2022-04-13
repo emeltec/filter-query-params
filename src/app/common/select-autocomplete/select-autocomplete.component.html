@@ -1,5 +1,5 @@
 <div class="select-autocomplete">
-  <input class="form-control" type="text" #search (change)="change($event)" (focus)="onFocus()" (blur)="onBlur()">
+  <input class="form-control" type="text" #search (keydown)="onKeyDown($event)" (change)="change($event)" (focus)="onFocus()" (blur)="onBlur()">
   <div class="panel" [ngClass]="{'show': providers.length > 0 && showPanel}">
     <div class="container-list"
     infiniteScroll

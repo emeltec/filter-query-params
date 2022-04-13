@@ -16,6 +16,7 @@ export class SelectAutocompleteComponent implements OnInit {
   @Output() emitStateCompany = new EventEmitter();
   @Input() stateCompany: string = '';
   @Input() messageCompany: string = '';
+  regexCode = new RegExp(/^[.0-9a-zA-ZŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÒÓÔÕÖ×ØÙÚÛÜÝàáâãäåæçèéêëìíîïòóôõöùúûüýÿÑñáéíóúÁÉÍÓÚ´‘-\s]*$/);
 
   showPanel=false;
   counterPage = 0;
@@ -30,13 +31,14 @@ export class SelectAutocompleteComponent implements OnInit {
   ngOnInit() {
     const keyUp$ = fromEvent(this.searchText.nativeElement, 'keyup');
     keyUp$.pipe(
-      tap(e => {
-        console.log(e);
+      tap(event => {
         this.counterPage = 0;
       }),
       pluck('target', 'value'),
-      map((text:any) => text.trim()),
-      filter((text:any) => text.length > 1),
+      map((text:any) => {
+        return text.trim().replace(/(\s{2,})/g, ' ');
+      }),
+      filter((text:string) => text.length > 1),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(text => this.service.getCompanies(text, this.counterPage))
@@ -99,6 +101,15 @@ export class SelectAutocompleteComponent implements OnInit {
       this.messageCompany = MessageError.COMPANY_EMPTY;
       this.emitStateCompany.emit(this.stateCompany);
     }
+  }
+
+  onKeyDown(event:any):boolean | any {
+    if(!this.regexCode.test(event.key)) {
+      console.log('Key Invalid');
+      return false;
+    }
+    const value = event.target.value;
+    console.log(value);
   }
 
 }

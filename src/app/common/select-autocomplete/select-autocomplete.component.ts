@@ -38,7 +38,7 @@ export class SelectAutocompleteComponent implements OnInit {
       map((text:any) => {
         return text.trim().replace(/(\s{2,})/g, ' ');
       }),
-      filter((text:string) => text.length > 100),
+      filter((text:string) => text.length > 1),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(text => this.service.getCompanies(text, this.counterPage))

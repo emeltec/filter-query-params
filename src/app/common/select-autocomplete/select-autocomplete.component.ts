@@ -38,7 +38,7 @@ export class SelectAutocompleteComponent implements OnInit {
       map((text:any) => {
         return text.trim().replace(/(\s{2,})/g, ' ');
       }),
-      filter((text:string) => text.length > 1),
+      filter((text:string) => text.length > 100),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(text => this.service.getCompanies(text, this.counterPage))
@@ -103,13 +103,15 @@ export class SelectAutocompleteComponent implements OnInit {
     }
   }
 
-  onKeyDown(event:any):boolean | any {
+  onKeyPress(event:any):boolean | any {
+    if(event.keyCode === 180) {
+      return false;
+    }
     if(!this.regexCode.test(event.key)) {
       console.log('Key Invalid');
       return false;
     }
     const value = event.target.value;
-    console.log(value);
   }
 
 }

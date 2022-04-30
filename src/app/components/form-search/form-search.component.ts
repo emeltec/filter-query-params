@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { SelectAutocompleteComponent } from 'src/app/common/select-autocomplete/select-autocomplete.component';
 import { MessageDefault, MessageError } from 'src/app/config/form.message';
 import { IProvider } from 'src/app/interfaces/provider';
 
@@ -9,6 +10,8 @@ import { IProvider } from 'src/app/interfaces/provider';
   styleUrls: ['./form-search.component.scss']
 })
 export class FormSearchComponent implements OnInit {
+  @ViewChild(SelectAutocompleteComponent) selectAutocomplete!: SelectAutocompleteComponent;
+
   stateCompany: string = '';
   messageCompany: string = MessageDefault.COMPANY_TO_PAY;
   providerSelected!: IProvider;
@@ -58,11 +61,11 @@ export class FormSearchComponent implements OnInit {
       this.messageCompany = MessageDefault.COMPANY_TO_PAY;
     }
     
-    
   }
 
-  cancel() {
-    
+  resetForm() {
+    this.formSearch.reset();
+    this.selectAutocomplete.resetInput();
   }
 
 }

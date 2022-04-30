@@ -8,7 +8,7 @@ import { IProvider } from './interfaces/provider';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Filter query params app';
+  title = 'Filter query params';
 
   constructor(
     private formBuilder: FormBuilder

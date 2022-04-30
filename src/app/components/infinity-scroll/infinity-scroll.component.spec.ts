@@ -1,9 +1,11 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 import { InfinityScrollComponent } from './infinity-scroll.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('InfinityScrollComponent', () => {
   let component: InfinityScrollComponent;
@@ -11,7 +13,12 @@ describe('InfinityScrollComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InfinityScrollComponent ]
+      imports: [
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [ InfinityScrollComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

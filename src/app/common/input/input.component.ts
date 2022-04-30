@@ -16,7 +16,7 @@ export class InputComponent implements OnInit {
 
   send() {
     console.log('Sendding')
-    this.emitMessage.emit('Hola carajo!')
+    this.emitMessage.emit('HOLA CARAJO!')
   }
 
 }

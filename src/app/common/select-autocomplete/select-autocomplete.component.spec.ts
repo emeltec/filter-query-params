@@ -1,9 +1,11 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 import { SelectAutocompleteComponent } from './select-autocomplete.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('SelectAutocompleteComponent', () => {
   let component: SelectAutocompleteComponent;
@@ -11,7 +13,12 @@ describe('SelectAutocompleteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectAutocompleteComponent ]
+      imports: [
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [ SelectAutocompleteComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

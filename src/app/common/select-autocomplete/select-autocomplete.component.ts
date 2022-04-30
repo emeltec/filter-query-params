@@ -114,4 +114,8 @@ export class SelectAutocompleteComponent implements OnInit {
     const value = event.target.value;
   }
 
+  resetInput() {
+    this.searchText.nativeElement.value = null;
+  }
+
 }

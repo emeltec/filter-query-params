@@ -18,7 +18,7 @@ export class SelectAutocompleteComponent implements OnInit {
   @Input() messageCompany: string = '';
   regexCode = new RegExp(/^[.0-9a-zA-ZŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÒÓÔÕÖ×ØÙÚÛÜÝàáâãäåæçèéêëìíîïòóôõöùúûüýÿÑñáéíóúÁÉÍÓÚ´‘-\s]*$/);
 
-  showPanel=false;
+  showPanel = false;
   counterPage = 0;
   totalPages = 0;
   providers: IProvider[] = []
@@ -29,33 +29,41 @@ export class SelectAutocompleteComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.searhCompany();
+  }
+
+  searhCompany() {
     const keyUp$ = fromEvent(this.searchText.nativeElement, 'keyup');
     keyUp$.pipe(
       tap(event => {
         this.counterPage = 0;
       }),
       pluck('target', 'value'),
-      map((text:any) => {
+      map((text: any) => {
         return text.trim().replace(/(\s{2,})/g, ' ');
       }),
-      filter((text:string) => text.length > 1),
+      filter((text: string) => text.length > 1),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(text => this.service.getCompanies(text, this.counterPage))
-    ).subscribe((response:IProviderResponse) => {
-      console.log(response);
-      this.providers = response.companies;
-      this.totalPages = response.totalPages;
-      this.validateCompany();
-    })
-
+    ).subscribe(
+      (response: IProviderResponse) => {
+        console.log(response);
+        this.providers = response.companies;
+        this.totalPages = response.totalPages;
+        this.validateCompany();
+      },
+      (exception) => {
+        this.searhCompany();
+      });
   }
 
   onScroll() {
     const currentValue = this.searchText.nativeElement.value;
     this.counterPage += 1;
 
-    if(this.counterPage <= this.totalPages){
+    if (this.counterPage <= this.totalPages) {
       this.service.getCompanies(currentValue, this.counterPage).subscribe(response => {
         this.providers.push(...response.companies)
       })
@@ -70,11 +78,11 @@ export class SelectAutocompleteComponent implements OnInit {
     this.showPanel = false;
   }
 
-  onFocus(){
+  onFocus() {
     this.showPanel = true;
   }
 
-  onBlur(){
+  onBlur() {
     setTimeout(() => {
       this.showPanel = false;
     }, 250);
@@ -82,8 +90,8 @@ export class SelectAutocompleteComponent implements OnInit {
 
   validateCompany() {
     this.emitSelectedProvider.emit({ name: null, serviceProviderId: null });
-    
-    if(this.providers.length === 0) {
+
+    if (this.providers.length === 0) {
       this.stateCompany = 'error';
       this.messageCompany = MessageError.COMPANY_NOT_FOUND
       this.emitStateCompany.emit(this.stateCompany);
@@ -94,20 +102,20 @@ export class SelectAutocompleteComponent implements OnInit {
     }
   }
 
-  change(event:any){
+  change(event: any) {
     console.log('CHANGE', event.target.value)
-    if(event.target.value.length < 2) {
+    if (event.target.value.length < 2) {
       this.stateCompany = 'error';
       this.messageCompany = MessageError.COMPANY_EMPTY;
       this.emitStateCompany.emit(this.stateCompany);
     }
   }
 
-  onKeyPress(event:any):boolean | any {
-    if(event.keyCode === 180) {
+  onKeyPress(event: any): boolean | any {
+    if (event.keyCode === 180) {
       return false;
     }
-    if(!this.regexCode.test(event.key)) {
+    if (!this.regexCode.test(event.key)) {
       console.log('Key Invalid');
       return false;
     }

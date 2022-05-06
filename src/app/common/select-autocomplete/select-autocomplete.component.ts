@@ -19,7 +19,7 @@ export class SelectAutocompleteComponent implements OnInit {
   regexCode = new RegExp(/^[.0-9a-zA-ZŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÒÓÔÕÖ×ØÙÚÛÜÝàáâãäåæçèéêëìíîïòóôõöùúûüýÿÑñáéíóúÁÉÍÓÚ´‘-\s]*$/);
 
   showPanel = false;
-  counterPage = 0;
+  counterPage = 1;
   totalPages = 0;
   providers: IProvider[] = []
 
@@ -37,7 +37,7 @@ export class SelectAutocompleteComponent implements OnInit {
     const keyUp$ = fromEvent(this.searchText.nativeElement, 'keyup');
     keyUp$.pipe(
       tap(event => {
-        this.counterPage = 0;
+        this.counterPage = 1;
       }),
       pluck('target', 'value'),
       map((text: any) => {

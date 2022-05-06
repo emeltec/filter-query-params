@@ -11,7 +11,7 @@ export class PaymentService {
   constructor(private http:HttpClient) { }
 
   getCompanies(name: string, page: number = 0): Observable<IProviderResponse> {
-    const URL = `http://localhost:3000/providers?name=${name}&page=${page}`;
+    const URL = `http://localhost:3000/msbm/providers?name=${name}&page=${page}`;
     return this.http.get<IProviderResponse>(URL);
   }
 
